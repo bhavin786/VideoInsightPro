@@ -128,49 +128,77 @@ export default function Home() {
           {/* Results Section */}
           {(results.transcript || results.summary || results.keywords) && (
             <div className="mt-8 space-y-6">
-              {results.summary && (
-                <Card className="p-4">
-                  <h3 className="text-lg font-semibold mb-2">Summary</h3>
-                  <p className="text-muted-foreground">{results.summary}</p>
-                </Card>
-              )}
-              
-              {results.keywords && results.keywords.length > 0 && (
-                <Card className="p-4">
-                  <h3 className="text-lg font-semibold mb-2">Key Topics</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {results.keywords.map((keyword, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-secondary rounded-full text-sm"
-                      >
-                        {keyword}
-                      </span>
-                    ))}
-                  </div>
-                </Card>
-              )}
-
-              {results.sponsorInfo && (
-                <Card className="p-4">
-                  <h3 className="text-lg font-semibold mb-2">Sponsored Content</h3>
-                  {results.sponsorInfo.hasSponsoredContent ? (
-                    <div className="space-y-2">
-                      {results.sponsorInfo.sponsoredSegments.map((segment, index) => (
-                        <div key={index} className="p-2 bg-secondary rounded">
-                          <p className="text-sm">
-                            {`${Math.floor(segment.start / 60)}:${(segment.start % 60).toString().padStart(2, '0')} - 
-                             ${Math.floor(segment.end / 60)}:${(segment.end % 60).toString().padStart(2, '0')}`}
-                          </p>
-                          <p className="text-muted-foreground">{segment.content}</p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-muted-foreground">No sponsored content detected</p>
+              <Tabs defaultValue="transcript-tab" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 mb-6">
+                  <TabsTrigger value="transcript-tab">Transcription</TabsTrigger>
+                  <TabsTrigger value="summary-tab">Summary & Key Points</TabsTrigger>
+                  {results.keywords && results.keywords.length > 0 && (
+                    <TabsTrigger value="keywords-tab">Key Topics</TabsTrigger>
                   )}
-                </Card>
-              )}
+                  {results.sponsorInfo && (
+                    <TabsTrigger value="sponsor-tab">Sponsor Info</TabsTrigger>
+                  )}
+                </TabsList>
+
+                <TabsContent value="transcript-tab">
+                  {results.transcript && (
+                    <Card className="p-4">
+                      <h3 className="text-lg font-semibold mb-2">Transcription</h3>
+                      <div className="text-muted-foreground" style={{ whiteSpace: 'pre-line' }}>{results.transcript}</div>
+                    </Card>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="summary-tab">
+                  {results.summary && (
+                    <Card className="p-4">
+                      <h3 className="text-lg font-semibold mb-2">Summary with Key Learning Points</h3>
+                      <div className="text-muted-foreground" style={{ whiteSpace: 'pre-line' }}>{results.summary}</div>
+                    </Card>
+                  )}
+                </TabsContent>
+
+                {results.keywords && results.keywords.length > 0 && (
+                  <TabsContent value="keywords-tab">
+                    <Card className="p-4">
+                      <h3 className="text-lg font-semibold mb-2">Key Topics</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {results.keywords.map((keyword, index) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 bg-secondary rounded-full text-sm"
+                          >
+                            {keyword}
+                          </span>
+                        ))}
+                      </div>
+                    </Card>
+                  </TabsContent>
+                )}
+
+                {results.sponsorInfo && (
+                  <TabsContent value="sponsor-tab">
+                    <Card className="p-4">
+                      <h3 className="text-lg font-semibold mb-2">Sponsored Content</h3>
+                      {results.sponsorInfo.hasSponsoredContent ? (
+                        <div className="space-y-2">
+                          {results.sponsorInfo.sponsoredSegments.map((segment, index) => (
+                            <div key={index} className="p-2 bg-secondary rounded">
+                              <p className="text-sm">
+                                {`${Math.floor(segment.start / 60)}:${(segment.start % 60).toString().padStart(2, '0')} -
+                                 ${Math.floor(segment.end / 60)}:${(segment.end % 60).toString().padStart(2, '0')}`}
+                              </p>
+                              <p className="text-muted-foreground">{segment.content}</p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground">No sponsored content detected</p>
+                      )}
+                    </Card>
+                  </TabsContent>
+                )}
+              </Tabs>
             </div>
           )}
         </Card>
